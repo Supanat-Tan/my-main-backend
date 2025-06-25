@@ -1,6 +1,8 @@
 require('dotenv').config();
 const express = require('express');
 const { default: mongoose } = require('mongoose');
+const { connectToMongoDB } = require('./libs/mongodb')
+const toDoRoutes = require('./routes/toDoRoutes')
 
 //express app
 const app = express();
@@ -16,6 +18,8 @@ app.use((req, res, next) => {
 //Static Files
 app.use(express.static('public'));
 
+app.use('/api/todo', toDoRoutes)
+
 app.get('/', (req, res) => {
     res.json({
         mssg: "Welcome!"
@@ -25,8 +29,11 @@ app.get('/', (req, res) => {
 //Starting server
 async function main() {
     try {
-        app.listen(3000, () => {
-            console.log('Listening on port 3000')
+        connectToMongoDB()
+        .then(() => {
+            app.listen(process.env.PORT, () => {
+                console.log('Listening on port 3000')
+            })
         })
 
         process.on('SIGINT', async () => {
