@@ -26,7 +26,21 @@ const toDoCreate = async (req, res) => {
     }
 }
 
+const deleteToDo = async (req, res) => {
+    const id = req.params.id;
+    try {
+        const todo = await toDoModel.findByIdAndDelete(id);
+        if (!todo) {
+            res.status(400).json({ error: err.message });
+        }
+        res.status(200).json(todo);
+    } catch (err) {
+        console.log('Error Deleting todo Id: ', id);
+    }
+}
+
 module.exports = {
     getAllToDo,
     toDoCreate,
+    deleteToDo,
 }
