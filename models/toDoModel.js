@@ -3,7 +3,11 @@ const mongoose = require('mongoose');
 const toDoSchema = new mongoose.Schema(
     {
         todo: {
-            type: 'string',
+            type: String,
+            required: true,
+        },
+        date: {
+            type: Date,
             required: true,
         },
     },
