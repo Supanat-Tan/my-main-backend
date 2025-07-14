@@ -1,8 +1,9 @@
 require('dotenv').config();
 const express = require('express');
 const { default: mongoose } = require('mongoose');
-const { connectToMongoDB } = require('./libs/mongodb')
-const toDoRoutes = require('./routes/toDoRoutes')
+const { connectToMongoDB } = require('./libs/mongodb');
+const toDoRoutes = require('./routes/toDoRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 //express app
 const app = express();
@@ -14,17 +15,12 @@ app.use((req, res, next) => {
     console.log(req.path, req.method);
     next();
 });
+app.use('/api/auth', userRoutes)
 
 //Static Files
 app.use(express.static('public'));
 
 app.use('/api/todo', toDoRoutes)
-
-app.get('/', (req, res) => {
-    res.json({
-        mssg: "Welcome!"
-    });
-});
 
 //Starting server
 async function main() {

@@ -1,10 +1,15 @@
 const express = require('express');
-const { getAllToDo, toDoCreate, deleteToDo } = require('../controllers/toDoControllers')
+const auth = require('../middleware/auth')
+const { getAllToDo, toDoCreate, toDoUpdate, deleteToDo } = require('../controllers/toDoControllers')
 
 const router = express.Router();
 
-router.get('/findall', getAllToDo)
-router.post('/create', toDoCreate)
-router.delete('/delete/:id', deleteToDo)
+//Require Auth to access todo routes
+router.use(auth);
+
+router.get('/:id', getAllToDo)
+router.post('/', toDoCreate)
+router.patch('/:id', toDoUpdate)
+router.delete('/:id', deleteToDo)
 
 module.exports = router;
