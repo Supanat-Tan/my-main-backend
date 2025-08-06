@@ -4,6 +4,8 @@ const { default: mongoose } = require('mongoose');
 const { connectToMongoDB } = require('./libs/mongodb');
 const toDoRoutes = require('./routes/toDoRoutes');
 const userRoutes = require('./routes/userRoutes');
+const cookieParser = require('cookie-parser');
+const auth = require('./middleware/auth');
 
 //express app
 const app = express();
@@ -11,10 +13,17 @@ const app = express();
 //Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser())
+
 app.use((req, res, next) => {
     console.log(req.path, req.method);
     next();
 });
+
+app.get("/api/auth/me", auth, (req, res) => {
+  res.status(200).json({ user: req.user });
+});
+
 app.use('/api/auth', userRoutes)
 
 //Static Files

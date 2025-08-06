@@ -20,11 +20,18 @@ const loginUser = async (req, res) => {
     const { email, password } = req.body;
     try {
         const user = await User.login(email, password);
-
         const token = createToken(user._id);
 
+        res.cookie("access_token", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            maxAge: 15 * 60 * 1000,
+        })
+
         res.status(200).json({
-            token, user: {
+            message: "Successfully Login",
+            user: {
                 _id: user._id,
                 email: user.email,
                 username: user.username
@@ -46,7 +53,18 @@ const loginUser = async (req, res) => {
     }
 }
 
+const logoutUser = (req, res) => {
+    res.clearCookie("access_token", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax"
+    })
+
+    res.status(200).json({ message: "Logged Out Successfully"});
+}
+
 module.exports = {
     loginUser,
     signupUser,
+    logoutUser,
 }
