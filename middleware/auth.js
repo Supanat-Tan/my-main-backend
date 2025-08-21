@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/userModel')
 
-const auth = (req, res, next) => {
+const auth = async (req, res, next) => {
   // For local storage
   //const token = req.headers.authorization?.split(' ')[1]; // Bearer token
 
@@ -12,7 +12,16 @@ const auth = (req, res, next) => {
 
   try {
     const verified = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = verified;
+    const user = await User.findById(verified._id, {
+      password: 0,
+    })
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    req.user = user;
+    
     next();
 
   } catch (err) {

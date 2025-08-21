@@ -26,7 +26,7 @@ const loginUser = async (req, res) => {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "lax",
-            maxAge: 15 * 60 * 1000,
+            maxAge: 60 * 60 * 1000,
         })
 
         res.status(200).json({
@@ -34,7 +34,8 @@ const loginUser = async (req, res) => {
             user: {
                 _id: user._id,
                 email: user.email,
-                username: user.username
+                username: user.username,
+                createdAt: user.createdAt,
             }
         })
 
@@ -63,8 +64,26 @@ const logoutUser = (req, res) => {
     res.status(200).json({ message: "Logged Out Successfully"});
 }
 
+const getUser = async (req, res) => {
+    const id  = req.params.id;
+    try {
+        const user = await User.findById(id, {
+            password: 0,
+        });
+
+        if (!user) {
+            res.status(400).json({ error: err.message });
+        }
+        res.status(200).json(user);
+    }
+    catch(err) {
+        console.log('Error Finding User: ', _id, err);
+    }
+}
+
 module.exports = {
     loginUser,
     signupUser,
     logoutUser,
+    getUser,
 }

@@ -4,6 +4,7 @@ const { default: mongoose } = require('mongoose');
 const { connectToMongoDB } = require('./libs/mongodb');
 const toDoRoutes = require('./routes/toDoRoutes');
 const userRoutes = require('./routes/userRoutes');
+const productRoutes = require('./routes/productRoutes')
 const cookieParser = require('cookie-parser');
 const auth = require('./middleware/auth');
 
@@ -21,7 +22,8 @@ app.use((req, res, next) => {
 });
 
 app.get("/api/auth/me", auth, (req, res) => {
-  res.status(200).json({ user: req.user });
+    console.log(req.user)
+    res.status(200).json(req.user);
 });
 
 app.use('/api/auth', userRoutes)
@@ -30,6 +32,8 @@ app.use('/api/auth', userRoutes)
 app.use(express.static('public'));
 
 app.use('/api/todo', toDoRoutes)
+
+app.use('/api/product', productRoutes)
 
 //Starting server
 async function main() {
