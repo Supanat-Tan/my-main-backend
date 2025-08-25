@@ -1,5 +1,29 @@
 const mongoose = require('mongoose');
 
+const ratingSchema = new mongoose.Schema(
+    {
+        userId: {
+            type: mongoose.Schema.Types.ObjectId, ref: "User"
+        },
+
+        score: {
+            type: Number,
+            min: 1,
+            max: 5,
+            required: true
+        },
+
+        comment: {
+            type: String
+        },
+
+        date: {
+            type: Date,
+            default: Date.now
+        }
+    }
+)
+
 const productSchema = new mongoose.Schema(
     {
         productName: {
@@ -19,6 +43,10 @@ const productSchema = new mongoose.Schema(
         rating: {
             type: [ratingSchema],
             default: []
+        },
+        averageRating: {
+            type: Number,
+            default: 0
         }
     },
     {
@@ -27,22 +55,6 @@ const productSchema = new mongoose.Schema(
     }
 );
 
-const ratingSchema = new mongoose.Schema(
-    {
-        userId: {
-            type: mongoose.Schema.Types.ObjectId, ref: "User"
-        },
-        score: {
-            type: Number,
-            min: 1,
-            max: 5,
-        },
-        date: {
-            type: Date,
-            default: Date.now
-        }
-    }
-)
 
 const Product = mongoose.model('Product', productSchema);
 module.exports = Product;
