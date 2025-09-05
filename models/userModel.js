@@ -17,6 +17,12 @@ const userSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        orderHistory: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Order',
+            required: false,
+            default: [],
+        }]
     },
 
     {
@@ -49,7 +55,7 @@ userSchema.statics.login = async function (email, password) {
         throw Error("All field must be filled")
     }
 
-    const user = await this.findOne({ email });
+    const user = await this.findOne({ email }).populate('orderHistory');
 
     if (!user) {
         throw Error("Incorrect Email")

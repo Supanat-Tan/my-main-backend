@@ -14,7 +14,7 @@ const auth = async (req, res, next) => {
     const verified = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(verified._id, {
       password: 0,
-    })
+    }).populate('orderHistory')
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });

@@ -36,6 +36,7 @@ const loginUser = async (req, res) => {
                 email: user.email,
                 username: user.username,
                 createdAt: user.createdAt,
+                orderHistory: user.orderHistory
             }
         })
 

@@ -5,6 +5,13 @@ const getAllProduct = async (req, res) => {
         const { productName } = req.query;
         let filter = {}
 
+        const { soldAmount } = req.query;
+        if (soldAmount === "most") {
+            const result = await productModel.find().sort({ soldAmount: -1 }).limit(4);
+            res.status(200).json(result)
+            return;
+        }
+
         if (productName) {
             filter.productName = new RegExp(productName, 'i')
             
@@ -96,9 +103,41 @@ const addRating = async (req, res) => {
     }
 }
 
+const updateSoldAmount = async (req, res) => {
+    const soldProducts = req.body;
+
+    if (!Array.isArray(soldProducts)) {
+        res.status(400).json({ message: 'Invalid input format. Expecting Array'});
+    }
+
+    try {
+        const bulkOps = soldProducts.map(item => ({
+            updateOne: {
+                filter: { _id: item._id },
+                update: { $inc: { soldAmount: item.quantity } },
+            }
+        }));
+
+        await productModel.bulkWrite(bulkOps);
+
+        const updatedProductId = soldProducts.map(item => item._id);
+
+        const updatedProduct = await productModel
+        .find({ _id: { $in: updatedProductId } })
+        .select({ productName: 1, soldAmount: 1});
+
+        res.status(200).json({ message: 'Update sell amount successfully', updatedProduct})
+    }
+    catch(err) {
+        console.log(err);
+        res.status(500).json({ message: 'Server error while updating products' });
+    }
+}
+
 module.exports = {
     createProduct,
     getAllProduct,
     addRating,
-    getOneProduct
+    getOneProduct,
+    updateSoldAmount
 }

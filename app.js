@@ -7,6 +7,7 @@ const userRoutes = require('./routes/userRoutes');
 const productRoutes = require('./routes/productRoutes')
 const cookieParser = require('cookie-parser');
 const auth = require('./middleware/auth');
+const orderRoutes = require('./routes/orderRoutes')
 
 //express app
 const app = express();
@@ -25,6 +26,8 @@ app.get("/api/auth/me", auth, (req, res) => {
     console.log(req.user)
     res.status(200).json(req.user);
 });
+
+app.use('/api/order', orderRoutes)
 
 app.use('/api/auth', userRoutes)
 
