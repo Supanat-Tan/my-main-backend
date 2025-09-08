@@ -8,9 +8,27 @@ const productRoutes = require('./routes/productRoutes')
 const cookieParser = require('cookie-parser');
 const auth = require('./middleware/auth');
 const orderRoutes = require('./routes/orderRoutes')
+const cors = require('cors')
 
 //express app
 const app = express();
+
+const allowOrigins = [
+    'https://supanat-shopping-web.netlify.app/',
+    'https://todo-list-crud-app.vercel.app/'
+]
+
+//CORS
+app.use(cors({
+    origin: function (origin, callback) {
+        if (!origin || allowOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error("Not allowed by CORS")) 
+        }
+    },
+    credentials: true,
+}));
 
 //Middleware
 app.use(express.json());
