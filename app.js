@@ -14,8 +14,8 @@ const cors = require('cors')
 const app = express();
 
 const allowOrigins = [
-    'https://supanat-shopping-web.netlify.app/',
-    'https://todo-list-crud-app.vercel.app/'
+    'https://supanat-shopping-web.netlify.app',
+    'https://todo-list-crud-app.vercel.app'
 ]
 
 //CORS
