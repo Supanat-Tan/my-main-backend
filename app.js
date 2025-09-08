@@ -15,7 +15,9 @@ const app = express();
 
 const allowOrigins = [
     'https://supanat-shopping-web.netlify.app',
-    'https://todo-list-crud-app.vercel.app'
+    'https://todo-list-crud-app.vercel.app',
+    'http://localhost:5173',
+    'http://localhost:8080/'
 ]
 
 //CORS
